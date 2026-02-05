@@ -26,6 +26,18 @@ def to_discord(data: dict):
     })
 
     return {"status": "sent"}
+@app.post("/from-discord")
+def from_discord(data: dict):
+    user_text = data.get("text")
+
+    r = requests.post(
+        GPTS_ENDPOINT,
+        json={"message": user_text}
+    )
+
+    reply = r.json().get("reply", "...")
+
+    return {"reply": reply}
 
 
 # ---------- Discord Bot ----------
