@@ -11,11 +11,9 @@ app = FastAPI()
 GPTS_ENDPOINT = os.getenv("GPTS_ACTION_ENDPOINT")
 
 @app.post("/to-discord")
-def from_discord(data: dict):
-    r = requests.post(GPTS_ENDPOINT, json={
-        "message": data["text"]
-    })
-    return {"reply": r.json().get("reply", "...")}
+def to_discord(data: dict):
+    print("From GPTs:", data)
+    return {"status": "ok"}
 
 # ---------- Discord Bot ----------
 TOKEN = os.getenv("DISCORD_TOKEN")
