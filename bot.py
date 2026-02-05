@@ -2,7 +2,7 @@ import os
 import discord
 import requests
 
-TOKEN = os.getenv("MTQ2ODkwOTA2NDgyOTQwMzE0Nw.G9QYxh.cMGUpwGWUrJVGqysd-vjOTLbpumw_0inS8lix0")
+TOKEN = os.getenv("DISCORD_TOKEN")
 API_URL = os.getenv("API_URL")  # https://yourapp.koyeb.app/from-discord
 
 intents = discord.Intents.default()
