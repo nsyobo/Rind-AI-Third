@@ -4,6 +4,9 @@ import discord
 import requests
 from fastapi import FastAPI
 import uvicorn
+conversation_memory = {}
+MAX_HISTORY = 50
+
 
 # ---------- FastAPI ----------
 app = FastAPI()
@@ -56,14 +59,24 @@ async def on_message(message):
     if message.author.bot:
         return
 
+    # メンションされてなければ無視
+    if client.user not in message.mentions:
+        return
+
+    # メンション部分を除去
+    content = message.content.replace(f"<@{client.user.id}>", "").strip()
+
     r = requests.post(
         "http://localhost:8000/from-discord",
-        json={"text": message.content}
+        json={
+            "user_id": str(message.author.id),
+            "text": content
+        }
     )
 
-    await message.channel.send(
-        r.json().get("reply")
-    )
+    reply = r.json().get("reply")
+    await message.channel.send(reply)
+
 
 # ---------- Run Both ----------
 def run_api():
