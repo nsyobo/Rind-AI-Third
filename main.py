@@ -31,17 +31,26 @@ def to_discord(data: dict):
     return {"status": "sent"}
 @app.post("/from-discord")
 def from_discord(data: dict):
+    user_id = data.get("user_id")
     user_text = data.get("text")
 
+    history = conversation_memory.get(user_id, [])
+    history.append({"role": "user", "content": user_text})
+
+    # 履歴をGPTsへ送信
     r = requests.post(
         GPTS_ENDPOINT,
-        json={"message": user_text}
+        json={
+            "messages": history
+        }
     )
 
     reply = r.json().get("reply", "...")
 
-    return {"reply": reply}
+    history.append({"role": "assistant", "content": reply})
+    conversation_memory[user_id] = history[-MAX_HISTORY:]
 
+    return {"reply": reply}
 
 # ---------- Discord Bot ----------
 TOKEN = os.getenv("DISCORD_TOKEN")
