@@ -12,8 +12,21 @@ GPTS_ENDPOINT = os.getenv("GPTS_ACTION_ENDPOINT")
 
 @app.post("/to-discord")
 def to_discord(data: dict):
-    print("From GPTs:", data)
-    return {"status": "ok"}
+    channel_id = os.getenv("DISCORD_CHANNEL_ID")
+    message = data.get("message")
+
+    url = f"https://discord.com/api/v10/channels/{channel_id}/messages"
+    headers = {
+        "Authorization": f"Bot {os.getenv('DISCORD_TOKEN')}",
+        "Content-Type": "application/json"
+    }
+
+    requests.post(url, headers=headers, json={
+        "content": message
+    })
+
+    return {"status": "sent"}
+
 
 # ---------- Discord Bot ----------
 TOKEN = os.getenv("DISCORD_TOKEN")
