@@ -10,7 +10,7 @@ app = FastAPI()
 
 GPTS_ENDPOINT = os.getenv("GPTS_ACTION_ENDPOINT")
 
-@app.post("/from-discord")
+@app.post("/to-discord")
 def from_discord(data: dict):
     r = requests.post(GPTS_ENDPOINT, json={
         "message": data["text"]
